@@ -1,0 +1,11 @@
+表單名稱,說明,備註,,,,,,,,,,,,,,,,,,,,,,,
+crm_profiles,客戶個人資訊,"所有檔案編碼必須為 UTF-8，檔案格式為 .csv 檔
+所有檔案主鍵不能為空值
+一筆訂單(order_number)只屬於一位消費者(crm_id)
+一位消費者(crm_id)可擁有多筆訂單(order_number)
+bu、type、segment、datetime 欄位值不能包含底線字元 ""_""
+datetime 欄位為台灣時間，格式為 yyyy-mm-dd HH:MM:SS
+
+總共需要繳交三份資料：crm_profiles、items、orders",,,,,,,,,,,,,,,,,,,,,,,
+items,品項分類,,,,,,,,,,,,,,,,,,,,,,,,
+orders,訂單紀錄,,,,,,,,,,,,,,,,,,,,,,,,
