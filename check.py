@@ -4,37 +4,39 @@ import argparse
 
 FILE_DEF = dict
 MISSING_RESULT = {}
+VALIDATE_RESULT = {}
 
 
-def print_col_result(dataType):
-    if len(FILE_DEF[dataType]['f_col']) > 0 or len(MISSING_RESULT[dataType]) > 0:
-        print(f"{dataType}.csv got error...")
-        if len(FILE_DEF[dataType]['f_col']) > 0:
-            print(f"there are columns not be found, which are already in definition.yml:")
-            for item in FILE_DEF[dataType]['f_col']:
-                print(f"- {'/'.join(item)}")
-        if len(MISSING_RESULT[dataType]) > 0:
-            print(f"missing predefined colums:")
-            for item in MISSING_RESULT[dataType]:
-                print(f"- {item}")
-    else:
-        print(f"{dataType}.csv pass the validation!")
-    print("="*40)
+def write_result(folder, module_list):
+    f = open(f"{folder}/result.csv", "w")
+    for m in module_list:
+        module_result = []
+        f.write(f"{m}\n")
+        f.write(f"{','.join(FILE_DEF[m]['column'])},undefined\n")
+        for col in FILE_DEF[m]['column']:
+            if col not in VALIDATE_RESULT[m].keys():
+                module_result.append('X')
+            else:
+                module_result.append('V')
+        module_result.append(','.join(MISSING_RESULT[m]))
+        f.write(f"{','.join(module_result)}\n")
 
 
 def check_file(folder: str, dataType: str):
+    VALIDATE_RESULT[dataType] = {}
     MISSING_RESULT[dataType] = []
     with open(f"{folder}/{dataType}.csv", newline='') as csvfile:
         file_dict = csv.DictReader(csvfile, delimiter=',')
         title_list = file_dict.fieldnames
         for title in title_list:
-            find_col = False
+            find_title = False
             for idx, col in enumerate(FILE_DEF[dataType]['f_col']):
                 if title.upper() in col:
-                    FILE_DEF[dataType]['f_col'].pop(idx)
-                    find_col = True
+                    VALIDATE_RESULT[dataType][FILE_DEF[dataType]
+                                              ['column'][idx]] = 'V'
+                    find_title = True
                     break
-            if not find_col:
+            if not find_title:
                 MISSING_RESULT[dataType].append(title)
 
 
@@ -51,7 +53,7 @@ if __name__ == '__main__':
     parser.add_argument("-f", "--folder", default="input",
                         help="the input folder")
     parser.add_argument("-m", "--module", default='crm,item,order',
-                        help="the input folder")
+                        help="the validation module")
 
     args = parser.parse_args()
     folder_list = args.folder.split(',')
@@ -64,7 +66,11 @@ if __name__ == '__main__':
     print(
         f"start to check folder:{folder_list} with module:{module_list}...\n")
     for f_name in folder_list:
-        print(f"folder:{f_name}")
+        print(f"processing folder:{f_name}...")
+        MISSING_RESULT = {}
+        VALIDATE_RESULT = {}
         for dataType in module_list:
             check_file(f_name, dataType)
-            print_col_result(dataType)
+        write_result(f_name, module_list)
+
+    print(f"finished.")

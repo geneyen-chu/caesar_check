@@ -1,0 +1,9 @@
+crm
+crm_id,email/信箱/郵件,telephone/市話/number,phone,country,city,region,mkt_flag,sex,age,marriage,child_cnt,income_level,edu_type,business_type,job_level,job_type,undefined
+V,V,X,X,V,V,V,V,V,X,X,X,X,X,X,X,X,paper
+item
+item_number,item_desc,inventory_item_id,item_publish_date,profit_center,item_copy,segment1,segment2,segment3,undefined
+V,V,V,V,V,V,V,V,V,
+order
+crm_id,order_date,order_number,order_amount,inventory_item_id,iquantity,iunit_selling_price,iactual_selling_price,ipromotion_name,undefined
+V,V,V,V,V,X,X,X,X,
